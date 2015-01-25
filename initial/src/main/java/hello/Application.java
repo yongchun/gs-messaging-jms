@@ -9,6 +9,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.listener.SimpleMessageListenerContainer;
 import org.springframework.jms.listener.adapter.MessageListenerAdapter;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.FileSystemUtils;
 
 import javax.jms.ConnectionFactory;
@@ -35,14 +36,21 @@ public class Application {
         messageListener.setDefaultListenerMethod("receiveMessage");
         return messageListener;
     }
+    @Bean
+    ThreadPoolTaskExecutor taskExecutor(){
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setCorePoolSize(5);
+        return taskExecutor;
+    }
 
     @Bean
     SimpleMessageListenerContainer container(MessageListenerAdapter messageListener,
-                                             ConnectionFactory connectionFactory) {
+                                             ConnectionFactory connectionFactory,ThreadPoolTaskExecutor taskExecutor) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setMessageListener(messageListener);
         container.setConnectionFactory(connectionFactory);
-        container.setConcurrentConsumers(4); // 设置消费者为多线程模式,最多4个线程
+        container.setConcurrentConsumers(2); // 设置消费者为多线程模式,最多4个线程
+        container.setTaskExecutor(taskExecutor); // 设置线程池
         container.setDestinationName(mailboxDestination);
         return container;
     }

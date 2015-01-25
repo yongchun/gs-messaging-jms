@@ -42,7 +42,7 @@ public class Application {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setMessageListener(messageListener);
         container.setConnectionFactory(connectionFactory);
-        container.setConcurrentConsumers(4); // 设置消费者为多线程模式
+        container.setConcurrentConsumers(4); // 设置消费者为多线程模式,最多4个线程
         container.setDestinationName(mailboxDestination);
         return container;
     }

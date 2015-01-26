@@ -49,7 +49,7 @@ public class Application {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setMessageListener(messageListener);
         container.setConnectionFactory(connectionFactory);
-        container.setConcurrentConsumers(2); // 设置消费者为多线程模式,最多4个线程
+        container.setConcurrentConsumers(2); // 为队列设置2个并行消费者
         container.setTaskExecutor(taskExecutor); // 设置线程池
         container.setDestinationName(mailboxDestination);
         return container;
